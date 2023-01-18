@@ -852,7 +852,7 @@ class Pad:
                 max_size = max(results[key].shape[:2])
                 self.size = (max_size, max_size)
             if self.size is not None:
-                padded_img,pad_duijie = mmcv.impad(
+                padded_img = mmcv.impad(
                     results[key], shape=self.size, pad_val=pad_val)
             elif self.size_divisor is not None:
                 padded_img = mmcv.impad_to_multiple(
@@ -865,7 +865,7 @@ class Pad:
         results['pad_fixed_size'] = self.size
         results['pad_size_divisor'] = self.size_divisor
         # 对接测试
-        results['pad_duijie'] = pad_duijie
+        # results['pad_duijie'] = pad_duijie
 
     def _pad_masks(self, results):
         """Pad masks according to ``results['pad_shape']``."""
