@@ -1,0 +1,436 @@
+/home/wx/anaconda3/envs/MMDetection/bin/python /opt/pycharm-community-2020.3.3/plugins/python-ce/helpers/pydev/pydevd.py --multiproc --qt-support=auto --client 127.0.0.1 --port 45849 --file /home/wx/git/beifen/yuml/tools/train.py configs/yolov5/yolov5_train.py --work-dir yolov5_try_workdir --gpu-ids 2
+Connected to pydev debugger (build 203.7148.72)
+2022-05-05 02:20:42,192 - mmdet - INFO - Environment info:
+------------------------------------------------------------
+sys.platform: linux
+Python: 3.6.9 | packaged by conda-forge | (default, Mar  6 2020, 19:24:21) [GCC 7.3.0]
+CUDA available: True
+GPU 0,1,2: NVIDIA GeForce RTX 3090
+CUDA_HOME: /usr/local/cuda-11.4
+NVCC: Cuda compilation tools, release 11.4, V11.4.152
+GCC: gcc (Ubuntu 8.4.0-1ubuntu1~18.04) 8.4.0
+PyTorch: 1.8.0+cu111
+PyTorch compiling details: PyTorch built with:
+  - GCC 7.3
+  - C++ Version: 201402
+  - Intel(R) Math Kernel Library Version 2020.0.0 Product Build 20191122 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v1.7.0 (Git Hash 7aed236906b1f7a05c0917e5257a1af05e9ff683)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.1
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86
+  - CuDNN 8.0.5
+  - Magma 2.5.2
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.1, CUDNN_VERSION=8.0.5, CXX_COMPILER=/opt/rh/devtoolset-7/root/usr/bin/c++, CXX_FLAGS= -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_KINETO -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-sign-compare -Wno-unused-parameter -Wno-unused-variable -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_VERSION=1.8.0, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON,
+
+TorchVision: 0.9.0+cu111
+OpenCV: 4.5.5
+MMCV: 1.5.0
+MMCV Compiler: GCC 8.4
+MMCV CUDA Compiler: 11.4
+MMDetection: 2.20.0+51cca38
+------------------------------------------------------------
+
+2022-05-05 02:20:46,008 - mmdet - INFO - Distributed training: False
+2022-05-05 02:20:49,778 - mmdet - INFO - Config:
+checkpoint_config = dict(interval=1)
+log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
+custom_hooks = [dict(type='NumClassCheckHook')]
+dist_params = dict(backend='nccl')
+log_level = 'INFO'
+load_from = None
+resume_from = None
+workflow = [('train', 1)]
+_yolo_type = 0
+_depth_multiple = 0.33
+_width_multiple = 0.5
+model = dict(
+    type='YOLOV5',
+    pretrained=None,
+    backbone=dict(
+        type='YOLOV5Backbone', depth_multiple=0.33, width_multiple=0.5),
+    neck=None,
+    test_cfg=dict(
+        nms_pre=1000,
+        min_bbox_size=0,
+        score_thr=0,
+        conf_thr=0.001,
+        nms=dict(type='nms', iou_threshold=0.45),
+        max_per_img=300),
+    train_cfg=dict(
+        assigner=dict(
+            type='GridAssigner',
+            pos_iou_thr=0.5,
+            neg_iou_thr=0.5,
+            min_pos_iou=0)),
+    bbox_head=dict(
+        type='YOLOV5Head',
+        num_classes=80,
+        in_channels=[512, 256, 128],
+        dep_and_wid=[0.33, 0.5],
+        anchor_generator=dict(
+            type='YOLOAnchorGenerator',
+            base_sizes=[[(116, 90), (156, 198), (373, 326)],
+                        [(30, 61), (62, 45), (59, 119)],
+                        [(10, 13), (16, 30), (33, 23)]],
+            strides=[32, 16, 8]),
+        bbox_coder=dict(type='YOLOBBoxCoder'),
+        featmap_strides=[32, 16, 8],
+        loss_cls=dict(
+            type='CrossEntropyLoss',
+            use_sigmoid=True,
+            loss_weight=1.0,
+            reduction='sum'),
+        loss_conf=dict(
+            type='CrossEntropyLoss',
+            use_sigmoid=True,
+            loss_weight=1.0,
+            reduction='sum'),
+        loss_xy=dict(
+            type='CrossEntropyLoss',
+            use_sigmoid=True,
+            loss_weight=2.0,
+            reduction='sum'),
+        loss_wh=dict(type='MSELoss', loss_weight=2.0, reduction='sum')))
+data_root = 'data/coco/'
+dataset_type = 'CocoDataset'
+img_norm_cfg = dict(mean=[0, 0, 0], std=[255.0, 255.0, 255.0], to_rgb=True)
+img_scale = (640, 640)
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(640, 640),
+        flip=False,
+        transforms=[
+            dict(type='Resize', keep_ratio=True),
+            dict(
+                type='Normalize',
+                mean=[0, 0, 0],
+                std=[255.0, 255.0, 255.0],
+                to_rgb=True),
+            dict(type='Pad', size_divisor=32),
+            dict(type='ImageToTensor', keys=['img']),
+            dict(
+                type='Collect',
+                keys=['img'],
+                meta_keys=('filename', 'ori_filename', 'ori_shape',
+                           'img_shape', 'pad_shape', 'scale_factor', 'flip',
+                           'flip_direction', 'img_norm_cfg'))
+        ])
+]
+train_pipeline = [
+    dict(type='LoadImageFromFile', to_float32=True),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(type='Expand', mean=[0, 0, 0], to_rgb=True, ratio_range=(1, 2)),
+    dict(
+        type='MinIoURandomCrop',
+        min_ious=(0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+        min_crop_size=0.3),
+    dict(type='Resize', img_scale=[(320, 320), (608, 608)], keep_ratio=True),
+    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(type='PhotoMetricDistortion'),
+    dict(
+        type='Normalize',
+        mean=[0, 0, 0],
+        std=[255.0, 255.0, 255.0],
+        to_rgb=True),
+    dict(type='Pad', size_divisor=32),
+    dict(type='DefaultFormatBundle'),
+    dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+]
+train_dataset = dict(
+    type='MultiImageMixDataset',
+    dataset=dict(
+        type='CocoDataset',
+        ann_file='data/coco/annotations/instances_val2017.json',
+        img_prefix='data/coco/images/val2017/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(type='LoadAnnotations', with_bbox=True)
+        ],
+        filter_empty_gt=False),
+    pipeline=[
+        dict(type='LoadImageFromFile', to_float32=True),
+        dict(type='LoadAnnotations', with_bbox=True),
+        dict(type='Expand', mean=[0, 0, 0], to_rgb=True, ratio_range=(1, 2)),
+        dict(
+            type='MinIoURandomCrop',
+            min_ious=(0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+            min_crop_size=0.3),
+        dict(
+            type='Resize', img_scale=[(320, 320), (608, 608)],
+            keep_ratio=True),
+        dict(type='RandomFlip', flip_ratio=0.5),
+        dict(type='PhotoMetricDistortion'),
+        dict(
+            type='Normalize',
+            mean=[0, 0, 0],
+            std=[255.0, 255.0, 255.0],
+            to_rgb=True),
+        dict(type='Pad', size_divisor=32),
+        dict(type='DefaultFormatBundle'),
+        dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+    ])
+data = dict(
+    samples_per_gpu=8,
+    workers_per_gpu=4,
+    persistent_workers=True,
+    train=dict(
+        type='MultiImageMixDataset',
+        dataset=dict(
+            type='CocoDataset',
+            ann_file='data/coco/annotations/instances_val2017.json',
+            img_prefix='data/coco/images/val2017/',
+            pipeline=[
+                dict(type='LoadImageFromFile'),
+                dict(type='LoadAnnotations', with_bbox=True)
+            ],
+            filter_empty_gt=False),
+        pipeline=[
+            dict(type='LoadImageFromFile', to_float32=True),
+            dict(type='LoadAnnotations', with_bbox=True),
+            dict(
+                type='Expand', mean=[0, 0, 0], to_rgb=True,
+                ratio_range=(1, 2)),
+            dict(
+                type='MinIoURandomCrop',
+                min_ious=(0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+                min_crop_size=0.3),
+            dict(
+                type='Resize',
+                img_scale=[(320, 320), (608, 608)],
+                keep_ratio=True),
+            dict(type='RandomFlip', flip_ratio=0.5),
+            dict(type='PhotoMetricDistortion'),
+            dict(
+                type='Normalize',
+                mean=[0, 0, 0],
+                std=[255.0, 255.0, 255.0],
+                to_rgb=True),
+            dict(type='Pad', size_divisor=32),
+            dict(type='DefaultFormatBundle'),
+            dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
+        ]),
+    val=dict(
+        type='CocoDataset',
+        ann_file='data/coco/annotations/instances_val2017.json',
+        img_prefix='data/coco/images/val2017/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(640, 640),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(
+                        type='Normalize',
+                        mean=[0, 0, 0],
+                        std=[255.0, 255.0, 255.0],
+                        to_rgb=True),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(
+                        type='Collect',
+                        keys=['img'],
+                        meta_keys=('filename', 'ori_filename', 'ori_shape',
+                                   'img_shape', 'pad_shape', 'scale_factor',
+                                   'flip', 'flip_direction', 'img_norm_cfg'))
+                ])
+        ]),
+    test=dict(
+        type='CocoDataset',
+        ann_file='data/coco/annotations/instances_val2017.json',
+        img_prefix='data/coco/images/val2017/',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                type='MultiScaleFlipAug',
+                img_scale=(640, 640),
+                flip=False,
+                transforms=[
+                    dict(type='Resize', keep_ratio=True),
+                    dict(
+                        type='Normalize',
+                        mean=[0, 0, 0],
+                        std=[255.0, 255.0, 255.0],
+                        to_rgb=True),
+                    dict(type='Pad', size_divisor=32),
+                    dict(type='ImageToTensor', keys=['img']),
+                    dict(
+                        type='Collect',
+                        keys=['img'],
+                        meta_keys=('filename', 'ori_filename', 'ori_shape',
+                                   'img_shape', 'pad_shape', 'scale_factor',
+                                   'flip', 'flip_direction', 'img_norm_cfg'))
+                ])
+        ]))
+optimizer = dict(type='SGD', lr=0.001, momentum=0.9, weight_decay=0.0005)
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+lr_config = dict(
+    policy='step',
+    warmup='linear',
+    warmup_iters=2000,
+    warmup_ratio=0.1,
+    step=[218, 246])
+runner = dict(type='EpochBasedRunner', max_epochs=300)
+evaluation = dict(interval=30, metric=['bbox'])
+work_dir = 'yolov5_try_workdir'
+auto_resume = False
+gpu_ids = [2]
+
+2022-05-05 02:20:49,779 - mmdet - INFO - Set random seed to 501134645, deterministic: False
+Backend TkAgg is interactive backend. Turning interactive mode on.
+loading annotations into memory...
+Done (t=0.57s)
+creating index...
+index created!
+loading annotations into memory...
+Done (t=0.56s)
+creating index...
+index created!
+2022-05-05 02:21:03,667 - mmdet - INFO - Start running, host: wx@YUSN01, work_dir: /home/wx/git/beifen/yuml/yolov5_try_workdir
+2022-05-05 02:21:03,667 - mmdet - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) StepLrUpdaterHook
+(NORMAL      ) CheckpointHook
+(LOW         ) EvalHook
+(VERY_LOW    ) TextLoggerHook
+ --------------------
+before_train_epoch:
+(VERY_HIGH   ) StepLrUpdaterHook
+(NORMAL      ) NumClassCheckHook
+(LOW         ) IterTimerHook
+(LOW         ) EvalHook
+(VERY_LOW    ) TextLoggerHook
+ --------------------
+before_train_iter:
+(VERY_HIGH   ) StepLrUpdaterHook
+(LOW         ) IterTimerHook
+(LOW         ) EvalHook
+ --------------------
+after_train_iter:
+(ABOVE_NORMAL) OptimizerHook
+(NORMAL      ) CheckpointHook
+(LOW         ) IterTimerHook
+(LOW         ) EvalHook
+(VERY_LOW    ) TextLoggerHook
+ --------------------
+after_train_epoch:
+(NORMAL      ) CheckpointHook
+(LOW         ) EvalHook
+(VERY_LOW    ) TextLoggerHook
+ --------------------
+before_val_epoch:
+(NORMAL      ) NumClassCheckHook
+(LOW         ) IterTimerHook
+(VERY_LOW    ) TextLoggerHook
+ --------------------
+before_val_iter:
+(LOW         ) IterTimerHook
+ --------------------
+after_val_iter:
+(LOW         ) IterTimerHook
+ --------------------
+after_val_epoch:
+(VERY_LOW    ) TextLoggerHook
+ --------------------
+after_run:
+(VERY_LOW    ) TextLoggerHook
+ --------------------
+2022-05-05 02:21:03,668 - mmdet - INFO - workflow: [('train', 1)], max: 300 epochs
+2022-05-05 02:21:03,669 - mmdet - INFO - Checkpoints will be saved to /home/wx/git/beifen/yuml/yolov5_try_workdir by HardDiskBackend.
+/pytorch/aten/src/ATen/native/cuda/IndexKernel.cu:142: operator(): block: [0,0,0], thread: [6,0,0] Assertion `index >= -sizes[i] && index < sizes[i] && "index out of bounds"` failed.
+Traceback (most recent call last):
+  File "/opt/pycharm-community-2020.3.3/plugins/python-ce/helpers/pydev/pydevd.py", line 1477, in _exec
+    pydev_imports.execfile(file, globals, locals)  # execute the script
+  File "/opt/pycharm-community-2020.3.3/plugins/python-ce/helpers/pydev/_pydev_imps/_pydev_execfile.py", line 18, in execfile
+    exec(compile(contents+"\n", file, 'exec'), glob, loc)
+  File "/home/wx/git/beifen/yuml/tools/train.py", line 196, in <module>
+    main()
+  File "/home/wx/git/beifen/yuml/tools/train.py", line 192, in main
+    meta=meta)
+  File "/home/wx/git/beifen/yuml/mmdet/apis/train.py", line 209, in train_detector
+    runner.run(data_loaders, cfg.workflow)
+  File "/home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/mmcv/runner/epoch_based_runner.py", line 127, in run
+    epoch_runner(data_loaders[i], **kwargs)
+  File "/home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/mmcv/runner/epoch_based_runner.py", line 50, in train
+    self.run_iter(data_batch, train_mode=True, **kwargs)
+  File "/home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/mmcv/runner/epoch_based_runner.py", line 30, in run_iter
+    **kwargs)
+  File "/home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/mmcv/parallel/data_parallel.py", line 75, in train_step
+    return self.module.train_step(*inputs[0], **kwargs[0])
+  File "/home/wx/git/beifen/yuml/mmdet/models/detectors/base.py", line 248, in train_step
+    losses = self(**data)
+  File "/home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/torch/nn/modules/module.py", line 889, in _call_impl
+    result = self.forward(*input, **kwargs)
+  File "/home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/mmcv/runner/fp16_utils.py", line 110, in new_func
+    return old_func(*args, **kwargs)
+  File "/home/wx/git/beifen/yuml/mmdet/models/detectors/base.py", line 172, in forward
+    return self.forward_train(img, img_metas, **kwargs)
+  File "/home/wx/git/beifen/yuml/mmdet/models/detectors/single_stage.py", line 84, in forward_train
+    gt_labels, gt_bboxes_ignore)
+  File "/home/wx/git/beifen/yuml/mmdet/models/dense_heads/base_dense_head.py", line 335, in forward_train
+    losses = self.loss(*loss_inputs, gt_bboxes_ignore=gt_bboxes_ignore)
+  File "/home/wx/git/beifen/yuml/mmdet/models/dense_heads/yolov5_head_inherit.py", line 297, in loss
+    anchor_list, responsible_flag_list, gt_bboxes, gt_labels, img_metas)
+  File "/home/wx/git/beifen/yuml/mmdet/models/dense_heads/yolov5_head_inherit.py", line 376, in get_targets
+    gt_labels_list, img_metas, num_level_anchors=num_level_anchors)
+  File "/home/wx/git/beifen/yuml/mmdet/core/utils/misc.py", line 30, in multi_apply
+    return tuple(map(list, zip(*map_results)))
+  File "/home/wx/git/beifen/yuml/mmdet/models/dense_heads/yolov5_head_inherit.py", line 408, in _get_targets_single
+    device=gt_bboxes.device).repeat(len(anchors[i])))
+RuntimeError: CUDA error: device-side assert triggered
+
+  File "/home/wx/git/beifen/yuml/mmdet/models/dense_heads/base_dense_head.py", line 335, in forward_train
+    losses = self.loss(*loss_inputs, gt_bboxes_ignore=gt_bboxes_ignore)
+  File "/home/wx/git/beifen/yuml/mmdet/models/dense_heads/yolov5_head_inherit.py", line 294, in loss
+    featmap_sizes, gt_bboxes[img_id], device))
+  File "/home/wx/git/beifen/yuml/mmdet/core/anchor/anchor_generator.py", line 800, in responsible_flags
+    device=device)
+  File "/home/wx/git/beifen/yuml/mmdet/core/anchor/anchor_generator.py", line 828, in single_level_responsible_flags
+    gt_bboxes_grid_y = torch.floor(gt_bboxes_cy / stride[1]).long()
+RuntimeError: CUDA error: device-side assert triggered
+
+
+
+
+terminate called after throwing an instance of 'c10::Error'
+  what():  CUDA error: device-side assert triggered
+Exception raised from create_event_internal at /pytorch/c10/cuda/CUDACachingAllocator.cpp:733 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::string) + 0x42 (0x7f4d2ce7b2f2 in /home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/torch/lib/libc10.so)
+frame #1: c10::detail::torchCheckFail(char const*, char const*, unsigned int, std::string const&) + 0x5b (0x7f4d2ce7867b in /home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/torch/lib/libc10.so)
+frame #2: c10::cuda::CUDACachingAllocator::raw_delete(void*) + 0x809 (0x7f4d3529b1f9 in /home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/torch/lib/libc10_cuda.so)
+frame #3: c10::TensorImpl::release_resources() + 0x54 (0x7f4d2ce633a4 in /home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/torch/lib/libc10.so)
+frame #4: <unknown function> + 0x6e9aea (0x7f4cacb76aea in /home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/torch/lib/libtorch_python.so)
+frame #5: <unknown function> + 0x6e9b91 (0x7f4cacb76b91 in /home/wx/anaconda3/envs/MMDetection/lib/python3.6/site-packages/torch/lib/libtorch_python.so)
+frame #6: <unknown function> + 0x1a238e (0x55e59e6ec38e in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #7: <unknown function> + 0xf2e38 (0x55e59e63ce38 in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #8: <unknown function> + 0xf2f57 (0x55e59e63cf57 in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #9: <unknown function> + 0xf2f57 (0x55e59e63cf57 in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #10: <unknown function> + 0xf2817 (0x55e59e63c817 in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #11: <unknown function> + 0xf26a7 (0x55e59e63c6a7 in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #12: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #13: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #14: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #15: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #16: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #17: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #18: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #19: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #20: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #21: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #22: <unknown function> + 0xf26bd (0x55e59e63c6bd in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #23: PyDict_SetItem + 0x3e4 (0x55e59e683aa4 in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #24: PyDict_SetItemString + 0x4f (0x55e59e69af6f in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #25: PyImport_Cleanup + 0x99 (0x55e59e6f6729 in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #26: Py_FinalizeEx + 0x61 (0x55e59e75a061 in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #27: Py_Main + 0x35e (0x55e59e76424e in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #28: main + 0xee (0x55e59e62e0ce in /home/wx/anaconda3/envs/MMDetection/bin/python)
+frame #29: __libc_start_main + 0xe7 (0x7f4d513adc87 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #30: <unknown function> + 0x1cad0a (0x55e59e714d0a in /home/wx/anaconda3/envs/MMDetection/bin/python)
+
+
+Process finished with exit code 134 (interrupted by signal 6: SIGABRT)
